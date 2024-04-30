@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import index
+from .views import TopDestination
 
 urlpatterns = [
-    path('', index, name="main_page")
+    path('', TopDestination.as_view(), name="main_page")
 ]

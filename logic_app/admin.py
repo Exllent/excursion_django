@@ -7,16 +7,17 @@ from .models import Excursion, Category, Location
 @admin.register(Excursion)
 class ExcursionAdmin(admin.ModelAdmin):
     fields = (
-        "title", "slug", "description", "price", "discount", "header_photo", "show_image", "is_published", "category",
+        "title", "slug", "description", "price", "discount", "header_photo", "show_image", "is_published", "top",
+        "category",
         "location")
     readonly_fields = ("slug", "show_image")
-    list_display = ("show_image", "title", "slug", "price", "discount", "is_published", "category")
+    list_display = ("show_image", "title", "slug", "price", "discount", "is_published", "top", "category")
     list_display_links = ("title", "show_image")
-    list_editable = ("is_published", "discount", "price", "category")
+    list_editable = ("is_published", "top", "discount", "price", "category")
     list_per_page = 5
     actions = ("set_published", "set_draft")
     search_fields = ("title",)
-    list_filter = ("is_published",)
+    list_filter = ("is_published", "top")
     save_on_top = True
 
     @admin.display(description="Фото экскурсии")

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator, MinLengthValidator, MaxValueValidator, MinValueValidator
+from django.db.models import OuterRef, Count, Subquery
 from pytils.translit import slugify
 
 
@@ -32,6 +33,10 @@ class Excursion(models.Model):
     choices_discount = {
         v: f"{v} Процентов" if v != 0 else "Без скидки" for v in range(0, 91, 5)
     }
+    excursion_top = {
+        False: "Нет",
+        True: "Да",
+    }
 
     title = models.CharField(max_length=75, verbose_name="Название Экскурсии", validators=Validators.title_validators)
     slug = models.SlugField(max_length=75, unique=True, db_index=True, verbose_name="Slug",
@@ -45,6 +50,7 @@ class Excursion(models.Model):
     is_published = models.BooleanField(choices=status_published,
                                        default=False,
                                        verbose_name="Статус")
+    top = models.BooleanField(choices=excursion_top, default=False, verbose_name="Отображение экскурсии вверху")
     category = models.ForeignKey("Category", blank=True, null=True, on_delete=models.SET_NULL, related_name='excursion',
                                  verbose_name="Категории")
     location = models.ManyToManyField("Location", blank=True, related_name='excursion', verbose_name="Локации")
@@ -71,12 +77,30 @@ class Category(models.Model):
     category_photo = models.ImageField(upload_to="category_photo/", null=True, blank=True,
                                        verbose_name="Заглавное фото категории")
 
+    objects = models.Manager()
+
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    @classmethod
+    def categories_with_excursion_data(cls):
+        subquery = Excursion.objects.filter(
+            category_id=OuterRef('pk'), is_published=True, top=True
+        ).values('title', 'description', 'price', 'slug', 'discount', 'header_photo')[:1]
+        categories_with_excursion_data = cls.objects.annotate(
+            excursion_count=Count('excursion'),
+            excursion_title=Subquery(subquery.values('title'), output_field=models.CharField()),
+            excursion_description=Subquery(subquery.values('description'), output_field=models.TextField()),
+            excursion_price=Subquery(subquery.values('price'), output_field=models.IntegerField()),
+            excursion_slug=Subquery(subquery.values('slug'), output_field=models.SlugField()),
+            excursion_discount=Subquery(subquery.values('discount'), output_field=models.IntegerField()),
+            excursion_header_photo=Subquery(subquery.values('header_photo'), output_field=models.URLField())
+        )
+        return categories_with_excursion_data
 
     class Meta:
         verbose_name = "Категорию"
