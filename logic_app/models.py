@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator, MinLengthValidator, MaxValueValidator, MinValueValidator
 from django.db.models import OuterRef, Count, Subquery
+from django.urls import reverse_lazy
 from pytils.translit import slugify
 
 
@@ -86,6 +87,9 @@ class Category(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse_lazy('destination', kwargs={"category_slug": self.slug})
+
     @classmethod
     def categories_with_excursion_data(cls):
         subquery = Excursion.objects.filter(
@@ -101,6 +105,10 @@ class Category(models.Model):
             excursion_header_photo=Subquery(subquery.values('header_photo'), output_field=models.URLField())
         )
         return categories_with_excursion_data
+
+    @classmethod
+    def get_categories_with_counts(cls):
+        return Category.objects.filter(excursion__is_published=True).annotate(excursion_count=Count('excursion'))
 
     class Meta:
         verbose_name = "Категорию"

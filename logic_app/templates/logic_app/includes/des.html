@@ -1,0 +1,30 @@
+<!-- Destination Start -->
+<div class="container-fluid py-5">
+    <div class="container pt-5 pb-3">
+        <div class="text-center mb-3 pb-3">
+            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Направления</h6>
+            <h1><strong>Исследуйте лучшие направления</strong></h1>
+        </div>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="destination-item position-relative overflow-hidden mb-2">
+                    <img class="img-fluid" src="{{category.category_photo.url}}" alt="">
+                    <a class="destination-overlay text-white text-decoration-none"
+                       href="{{ category.get_absolute_url }}">
+                        <h5 class="text-white">{{ category.title }}</h5>
+                        {% if category.excursion_count == 1 %}
+                        <span>{{ category.excursion_count }} Тур</span>
+                        {% elif category.excursion_count < 5 %}
+                        <span>{{ category.excursion_count }} Тура</span>
+                        {% else %}
+                        <span>{{ category.excursion_count }} Туров</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Destination End -->

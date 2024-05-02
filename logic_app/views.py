@@ -4,14 +4,17 @@ from django.views.generic import ListView
 from .models import Category, Excursion
 
 
-class TopDestination(ListView):
+class MainPage(ListView):
     template_name = "logic_app/index.html"
     queryset = Category.categories_with_excursion_data()
     context_object_name = "categories"
 
 
-def index(request: HttpRequest):
-    return render(request, template_name='logic_app/index.html')
+class Destination(ListView):
+    template_name = "logic_app/destination.html"
+    model = Category
+    queryset = Category.get_categories_with_counts()
+    context_object_name = "categories"
 
 
 def page_not_found(request, exception):
