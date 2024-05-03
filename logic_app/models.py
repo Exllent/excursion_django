@@ -59,6 +59,10 @@ class Excursion(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
+    @classmethod
+    def get_tours_by_category_slug(cls, slug: str):
+        return cls.objects.select_related("category").filter(category__slug=slug)
+
     def __str__(self):
         return self.title
 
@@ -89,22 +93,6 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('destination', kwargs={"category_slug": self.slug})
-
-    @classmethod
-    def categories_with_excursion_data(cls):
-        subquery = Excursion.objects.filter(
-            category_id=OuterRef('pk'), is_published=True, top=True
-        ).values('title', 'description', 'price', 'slug', 'discount', 'header_photo')[:1]
-        categories_with_excursion_data = cls.objects.annotate(
-            excursion_count=Count('excursion'),
-            excursion_title=Subquery(subquery.values('title'), output_field=models.CharField()),
-            excursion_description=Subquery(subquery.values('description'), output_field=models.TextField()),
-            excursion_price=Subquery(subquery.values('price'), output_field=models.IntegerField()),
-            excursion_slug=Subquery(subquery.values('slug'), output_field=models.SlugField()),
-            excursion_discount=Subquery(subquery.values('discount'), output_field=models.IntegerField()),
-            excursion_header_photo=Subquery(subquery.values('header_photo'), output_field=models.URLField())
-        )
-        return categories_with_excursion_data
 
     @classmethod
     def get_categories_with_counts(cls):

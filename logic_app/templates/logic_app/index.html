@@ -45,243 +45,110 @@
     </div>
 </div>
 
-<ul>
-    <!-- Carousel End -->
+<!-- Carousel End -->
 
-    <!-- About Start -->
-    <div class="container-fluid py-5">
-        <div class="container pt-5">
-            <div class="row">
-                <div class="col-lg-6" style="min-height: 500px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100" src="{% static '/logic_app/images/about.jpg' %}"
-                             style="object-fit: cover;">
-                    </div>
+
+{% show_destination categories %}
+
+
+<!-- Service Start -->
+<div class="container-fluid py-5">
+    <div class="container pt-5 pb-3">
+        <div class="text-center mb-3 pb-3">
+            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Сервис</h6>
+            <h1>Туры & Туристические услуги</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-item bg-white text-center mb-2 py-5 px-4">
+                    <i class="fa fa-2x fa-route mx-auto mb-4"></i>
+                    <h5 class="mb-2">Путеводитель</h5>
+                    <p class="m-0">Путеводитель предлагает разнообразные маршруты, каждый
+                        из них уникален и позволяет туристам наслаждаться разнообразием красот и
+                        впечатлений.</p>
                 </div>
-                <div class="col-lg-6 pt-5 pb-lg-5">
-                    <div class="about-text bg-white p-4 p-lg-5 my-lg-5">
-                        <h6 class="text-primary text-uppercase" style="letter-spacing: 3px;"><strong>О нас</strong></h6>
-                        <h1 class="mb-3">Мы предоставляем лучшие туристические пакеты в вашем бюджете</h1>
-                        <p>Добро пожаловать в [название вашей компании]!</p>
-                        <p>
-                            Мы - команда опытных специалистов в области туризма, которая стремится сделать каждое ваше
-                            путешествие незабываемым. Наша цель - предоставить клиентам высочайший уровень сервиса и
-                            комфорта, чтобы они могли насладиться каждым моментом своего отдыха.
-                        </p>
-
-                        <p><strong>Что делает нас особенными?</strong></p>
-
-                        <p>
-                            <strong>1. Индивидуальный подход:</strong>
-                            Мы понимаем, что каждый клиент уникален, поэтому мы
-                            разрабатываем персонализированные туры, учитывая ваши предпочтения и интересы. Мы стараемся
-                            сделать каждое путешествие идеально подходящим для вас.<br>
-
-                            <strong>2. Высокое качество услуг:</strong>
-                            Мы гордимся своим высоким уровнем сервиса и качеством услуг.
-                            Наша команда состоит из профессионалов, которые стремятся к безупречности во всем, от
-                            планирования маршрутов до организации развлечений и экскурсий. <br>
-
-                            <strong>3. Гарантия безопасности:</strong>
-                            Мы придаем большое значение безопасности наших клиентов. Мы
-                            работаем только с проверенными партнерами и обеспечиваем надежное сопровождение во время
-                            поездки, чтобы каждый момент вашего путешествия был спокоен и безопасен.
-                        </p>
-                        <p>
-                            С уважением, Команда [название вашей компании]
-                        </p>
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <img class="img-fluid" src="{% static '/logic_app/images/about-1.jpg' %}" alt="">
-                            </div>
-                            <div class="col-6">
-                                <img class="img-fluid" src="{% static '/logic_app/images/about-2.jpg' %}" alt="">
-                            </div>
-                        </div>
-                        <a href="" class="btn btn-primary mt-1">Book Now</a>
-                    </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-item bg-white text-center mb-2 py-5 px-4">
+                    <i class="fa fa-2x fa-ticket-alt mx-auto mb-4"></i>
+                    <h5 class="mb-2">Бронирование билетов</h5>
+                    <p class="m-0">Бронируйте билеты на экскурсии легко и быстро онлайн с нами! Гарантированные
+                        места и удобный онлайн процесс бронирования делают путешествие приятным.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-item bg-white text-center mb-2 py-5 px-4">
+                    <i class="fa fa-2x fa-hotel mx-auto mb-4"></i>
+                    <h5 class="mb-2">Остановки</h5>
+                    <p class="m-0">Наши остановки находятся рядом с отелями. Вам будет предоставлен адрес и
+                        геолокация ближайшей остановки, чтобы ваше
+                        путешествие началось с удобства и комфорта.</p>
                 </div>
             </div>
         </div>
     </div>
-    <!-- About End -->
-
-    <!-- Feature Start -->
-    <div class="container-fluid pb-5">
-        <div class="container pb-5">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="image-container-fea">
-                        <img src="{% static 'logic_app/images/1.png' %}" alt="">
-                    </div>
-                    <div class="flex-column">
-                        <h4 class="text-container-h4">Конкурентное ценообразование</h4>
-                        <p class="m-0">Конкурентное ценообразование, один из ключевых принципов нашей
-                            работы. Мы
-                            постоянно стремимся предлагать высокое качество услуг по оптимальным ценам, чтобы
-                            сделать путешествия доступными для всех наших клиентов.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="image-container-fea">
-                        <img src="{% static 'logic_app/images/2.png' %}" alt="">
-                    </div>
-                    <div class="flex-column">
-                        <h4 class="text-container-h4">Лучший сервис</h4>
-                        <p class="m-0">Добро пожаловать в нашу туристическую компанию, где лучший сервис - наша
-                            гордость. Мы гарантируем высокое качество обслуживания, профессионализм наших
-                            сотрудников и множество положительных эмоций. Рады помочь вам сделать
-                            ваше путешествие незабываемым!</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="image-container-fea">
-                        <img src="{% static 'logic_app/images/3.png' %}" alt="">
-                    </div>
-                    <div class="flex-column">
-                        <h4 class="text-container-h4">Гибкие условия бронирования</h4>
-                        <p class="m-0">Мы предоставляем гибкие условия бронирования, что позволяет нашим клиентам
-                            комфортно планировать свои поездки. Это включает гибкие правила отмены, возможность
-                            изменения дат или услуг без дополнительных затрат, что делает процесс бронирования
-                            удобным и безопасным</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Feature End -->
+</div>
+<!-- Service End -->
 
 
-    {% show_destination categories %}
+{% show_package excursion %}
+<div class="text-center">
+    <a href="{% url 'all_excursion' %}" class="btn btn-primary py-md-3 px-md-5 mt-2">Открыть все экскурсии</a>
+</div>
 
 
-    <!-- Service Start -->
-    <div class="container-fluid py-5">
-        <div class="container pt-5 pb-3">
-            <div class="text-center mb-3 pb-3">
-                <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Сервис</h6>
-                <h1>Туры & Туристические услуги</h1>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                        <i class="fa fa-2x fa-route mx-auto mb-4"></i>
-                        <h5 class="mb-2">Путеводитель</h5>
-                        <p class="m-0">Путеводитель предлагает разнообразные маршруты, каждый
-                            из них уникален и позволяет туристам наслаждаться разнообразием красот и
-                            впечатлений.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                        <i class="fa fa-2x fa-ticket-alt mx-auto mb-4"></i>
-                        <h5 class="mb-2">Бронирование билетов</h5>
-                        <p class="m-0">Бронируйте билеты на экскурсии легко и быстро онлайн с нами! Гарантированные
-                            места и удобный онлайн процесс бронирования делают путешествие приятным.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                        <i class="fa fa-2x fa-hotel mx-auto mb-4"></i>
-                        <h5 class="mb-2">Остановки</h5>
-                        <p class="m-0">Наши остановки находятся рядом с отелями. Вам будет предоставлен адрес и
-                            геолокация ближайшей остановки, чтобы ваше
-                            путешествие началось с удобства и комфорта.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
 
+<!-- Testimonial Start -->
+<!--    <div class="container-fluid py-5">-->
+<!--        <div class="container py-5">-->
+<!--            <div class="text-center mb-3 pb-3">-->
+<!--                <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Testimonial</h6>-->
+<!--                <h1>What Say Our Clients</h1>-->
+<!--            </div>-->
+<!--            <div class="owl-carousel testimonial-carousel">-->
+<!--                <div class="text-center pb-4">-->
+<!--                    <img class="img-fluid mx-auto" src="img/testimonial-1.jpg" style="width: 100px; height: 100px;">-->
+<!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
+<!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
+<!--                            eos labore diam-->
+<!--                        </p>-->
+<!--                        <h5 class="text-truncate">Client Name</h5>-->
+<!--                        <span>Profession</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="text-center">-->
+<!--                    <img class="img-fluid mx-auto" src="img/testimonial-2.jpg" style="width: 100px; height: 100px;">-->
+<!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
+<!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
+<!--                            eos labore diam-->
+<!--                        </p>-->
+<!--                        <h5 class="text-truncate">Client Name</h5>-->
+<!--                        <span>Profession</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="text-center">-->
+<!--                    <img class="img-fluid mx-auto" src="img/testimonial-3.jpg" style="width: 100px; height: 100px;">-->
+<!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
+<!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
+<!--                            eos labore diam-->
+<!--                        </p>-->
+<!--                        <h5 class="text-truncate">Client Name</h5>-->
+<!--                        <span>Profession</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="text-center">-->
+<!--                    <img class="img-fluid mx-auto" src="img/testimonial-4.jpg" style="width: 100px; height: 100px;">-->
+<!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
+<!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
+<!--                            eos labore diam-->
+<!--                        </p>-->
+<!--                        <h5 class="text-truncate">Client Name</h5>-->
+<!--                        <span>Profession</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!-- Testimonial End -->
 
-    <!-- Packages Start -->
-    <div class="container-fluid py-5">
-        <div class="container pt-5 pb-3">
-            <div class="text-center mb-3 pb-3">
-                <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Packages</h6>
-                <h1>Pefect Tour Packages</h1>
-            </div>
-            <div class="row">
-                {% for excursion_data in categories %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="package-item bg-white mb-2">
-                        <img class="img-fluid" src="media/{{ excursion_data.excursion_header_photo }}" alt="">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between mb-3">
-                                <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>Какой- то текст</small>
-                                <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
-                                <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
-                            </div>
-                            <a class="h5 text-decoration-none" href="">{{ excursion_data.excursion_title }}</a>
-                            <div class="border-top mt-4 pt-4">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small>
-                                    </h6>
-                                    <h5 class="m-0">{{ excursion_data.excursion_price }} ₽</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <!-- Packages End -->
-
-
-    <!-- Testimonial Start -->
-    <!--    <div class="container-fluid py-5">-->
-    <!--        <div class="container py-5">-->
-    <!--            <div class="text-center mb-3 pb-3">-->
-    <!--                <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Testimonial</h6>-->
-    <!--                <h1>What Say Our Clients</h1>-->
-    <!--            </div>-->
-    <!--            <div class="owl-carousel testimonial-carousel">-->
-    <!--                <div class="text-center pb-4">-->
-    <!--                    <img class="img-fluid mx-auto" src="img/testimonial-1.jpg" style="width: 100px; height: 100px;">-->
-    <!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
-    <!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
-    <!--                            eos labore diam-->
-    <!--                        </p>-->
-    <!--                        <h5 class="text-truncate">Client Name</h5>-->
-    <!--                        <span>Profession</span>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="text-center">-->
-    <!--                    <img class="img-fluid mx-auto" src="img/testimonial-2.jpg" style="width: 100px; height: 100px;">-->
-    <!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
-    <!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
-    <!--                            eos labore diam-->
-    <!--                        </p>-->
-    <!--                        <h5 class="text-truncate">Client Name</h5>-->
-    <!--                        <span>Profession</span>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="text-center">-->
-    <!--                    <img class="img-fluid mx-auto" src="img/testimonial-3.jpg" style="width: 100px; height: 100px;">-->
-    <!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
-    <!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
-    <!--                            eos labore diam-->
-    <!--                        </p>-->
-    <!--                        <h5 class="text-truncate">Client Name</h5>-->
-    <!--                        <span>Profession</span>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="text-center">-->
-    <!--                    <img class="img-fluid mx-auto" src="img/testimonial-4.jpg" style="width: 100px; height: 100px;">-->
-    <!--                    <div class="testimonial-text bg-white p-4 mt-n5">-->
-    <!--                        <p class="mt-5">Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod-->
-    <!--                            eos labore diam-->
-    <!--                        </p>-->
-    <!--                        <h5 class="text-truncate">Client Name</h5>-->
-    <!--                        <span>Profession</span>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-    <!-- Testimonial End -->
-
-    {% endblock %}
+{% endblock %}

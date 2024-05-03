@@ -5,5 +5,9 @@ register = template.Library()
 
 @register.inclusion_tag("logic_app/includes/des.html")
 def show_destination(categories: list):
-    print(categories)
     return {"categories": categories}
+
+
+@register.inclusion_tag("logic_app/includes/pack.html")
+def show_package(excursion: list):
+    return {"excursion": excursion}
