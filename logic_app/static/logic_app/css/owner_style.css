@@ -1,0 +1,36 @@
+.image-container-fea {
+    width: 100px;
+    height: 100px;
+    float: left;
+    margin-right: 10px;
+}
+
+.image-container-fea img {
+    width: 100px;
+    height: 100%;
+    object-fit: cover; /* Сохранение пропорций и заполнение контейнера */
+    shape-outside: border-box; /* Форма текста вокруг картинки (с учетом границы) */
+    shape-margin: 20px; /* Расстояние между текстом и картинкой */
+}
+
+.text-container-h4 {
+    word-break: normal; /* По умолчанию */
+}
+
+@media only screen and (max-width: 1200px) {
+    .text-container-h4 {
+        word-break: break-all; /* Применить на мобильных устройствах и планшетах */
+    }
+}
+
+.time-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #4CAF50; /* зелёный цвет */
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px; /* белый текст на зелёном фоне */
+}
+
+

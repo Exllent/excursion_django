@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator, MinLengthValidator, MaxValueValidator, MinValueValidator
-from django.db.models import OuterRef, Count, Subquery
+from django.db.models import Count
 from django.urls import reverse_lazy
 from pytils.translit import slugify
 
@@ -51,13 +51,17 @@ class Excursion(models.Model):
     is_published = models.BooleanField(choices=status_published,
                                        default=False,
                                        verbose_name="Статус")
-    top = models.BooleanField(choices=excursion_top, default=False, verbose_name="Отображение экскурсии вверху")
+    top = models.BooleanField(choices=excursion_top, default=False, verbose_name="Отображение экскурсии на главной странице")
     category = models.ForeignKey("Category", blank=True, null=True, on_delete=models.SET_NULL, related_name='excursion',
                                  verbose_name="Категории")
     location = models.ManyToManyField("Location", blank=True, related_name='excursion', verbose_name="Локации")
 
     objects = models.Manager()
     published = PublishedManager()
+
+    @classmethod
+    def get_tours_with_count_location(cls):
+        return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, top=True)
 
     @classmethod
     def get_tours_by_category_slug(cls, slug: str):

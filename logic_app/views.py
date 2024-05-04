@@ -1,4 +1,6 @@
-from django.http import HttpResponseNotFound
+from django.db.models import QuerySet
+from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
+from django.shortcuts import render
 from django.views.generic import ListView
 from .models import Category, Excursion
 
@@ -8,10 +10,10 @@ class MainPage(ListView):
     queryset = Category.get_categories_with_counts()
     context_object_name = "categories"
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.get_categories_with_counts()
-        context["excursion"] = Excursion.objects.filter(is_published=True, top=True)
+        context["excursion"] = Excursion.get_tours_with_count_location()
         return context
 
 
@@ -20,7 +22,7 @@ class Destination(ListView):
     # queryset = Excursion.objects.all()
     context_object_name = "excursion"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         return Excursion.get_tours_by_category_slug(slug=self.kwargs["category_slug"])
 
 
@@ -30,5 +32,9 @@ class Tours(ListView):
     context_object_name = "excursion"
 
 
-def page_not_found(request, exception):
+def about_us(request: HttpRequest) -> HttpResponse:
+    return render(request, template_name="logic_app/about.html")
+
+
+def page_not_found(request, exception) -> HttpResponseNotFound:
     return HttpResponseNotFound(request, exception)
