@@ -7,7 +7,7 @@ from pytils.translit import slugify
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_published=True)
+        return super().get_queryset().annotate(location_count=Count('location__id')).filter(is_published=True)
 
 
 class Validators:
@@ -51,9 +51,9 @@ class Excursion(models.Model):
     is_published = models.BooleanField(choices=status_published,
                                        default=False,
                                        verbose_name="Статус")
-    top = models.BooleanField(choices=excursion_top, default=False, verbose_name="Отображение экскурсии на главной странице")
-    category = models.ForeignKey("Category", blank=True, null=True, on_delete=models.SET_NULL, related_name='excursion',
-                                 verbose_name="Категории")
+    top = models.BooleanField(choices=excursion_top, default=False,
+                              verbose_name="Отображение экскурсии на главной странице")
+    category = models.ManyToManyField("Category", blank=True, related_name='excursion', verbose_name="Категории")
     location = models.ManyToManyField("Location", blank=True, related_name='excursion', verbose_name="Локации")
 
     objects = models.Manager()
@@ -64,8 +64,15 @@ class Excursion(models.Model):
         return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, top=True)
 
     @classmethod
+    def get_tour_with_locations_by_slug(cls, slug: str):
+        return cls.objects.prefetch_related('location').get(slug=slug)
+
+    @classmethod
     def get_tours_by_category_slug(cls, slug: str):
-        return cls.objects.select_related("category").filter(category__slug=slug)
+        return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, category__slug=slug)
+
+    def get_absolute_url(self):
+        return reverse_lazy('excursion', kwargs={"excursion_slug": self.slug})
 
     def __str__(self):
         return self.title

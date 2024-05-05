@@ -11,9 +11,9 @@ class ExcursionAdmin(admin.ModelAdmin):
         "category",
         "location")
     readonly_fields = ("slug", "show_image")
-    list_display = ("show_image", "title", "slug", "price", "discount", "is_published", "top", "category")
+    list_display = ("show_image", "title", "slug", "price", "discount", "is_published", "top")
     list_display_links = ("title", "show_image")
-    list_editable = ("is_published", "top", "discount", "price", "category")
+    list_editable = ("is_published", "top", "discount", "price")
     list_per_page = 5
     actions = ("set_published", "set_draft")
     search_fields = ("title",)

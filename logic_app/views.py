@@ -1,26 +1,24 @@
 from django.db.models import QuerySet
 from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Category, Excursion
 
 
 class MainPage(ListView):
     template_name = "logic_app/index.html"
-    queryset = Category.get_categories_with_counts()
-    context_object_name = "categories"
+    context_object_name = "context_data"
 
-    def get_context_data(self, *, object_list=None, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["categories"] = Category.get_categories_with_counts()
-        context["excursion"] = Excursion.get_tours_with_count_location()
-        return context
+    def get_queryset(self) -> dict[str: QuerySet]:
+        return {
+            "excursions": Excursion.get_tours_with_count_location(),
+            "categories": Category.get_categories_with_counts()
+        }
 
 
 class Destination(ListView):
     template_name = "logic_app/package.html"
-    # queryset = Excursion.objects.all()
-    context_object_name = "excursion"
+    context_object_name = "excursions"
 
     def get_queryset(self) -> QuerySet:
         return Excursion.get_tours_by_category_slug(slug=self.kwargs["category_slug"])
@@ -29,7 +27,16 @@ class Destination(ListView):
 class Tours(ListView):
     template_name = "logic_app/package.html"
     queryset = Excursion.published.all()
-    context_object_name = "excursion"
+    context_object_name = "excursions"
+
+
+class ShowTour(DetailView):
+    template_name = "logic_app/excursion.html"
+    model = Excursion
+    slug_url_kwarg = 'excursion_slug'
+
+    def get_queryset(self):
+        return Excursion.get_tour_with_locations_by_slug(self.kwargs['excursion_slug'])
 
 
 def about_us(request: HttpRequest) -> HttpResponse:

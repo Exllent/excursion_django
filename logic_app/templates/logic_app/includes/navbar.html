@@ -2,17 +2,24 @@
 <div class="container-fluid position-relative nav-bar p-0">
     <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
         <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-            <a href="" class="navbar-brand">
+            <a href="{% url 'main_page' %}" class="navbar-brand">
                 <h1 class="m-0 text-primary"><span class="text-dark">TRAVEL</span>ER</h1>
             </a>
+            <div class="search-form">
+                <input id="searchInput" class="search-input" type="text" placeholder="Поисковое слово"
+                       aria-label=".form-control-sm example">
+                <svg id="searchIcon" class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </div>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                 <div class="navbar-nav ml-auto py-0">
-                    <a href="{% url 'main_page' %}" class="nav-item nav-link">Домашняя страница</a>
-                    <a href="{% url 'about_us' %}" class="nav-item nav-link active">О нас</a>
-<!--                    <a href="" class="nav-item nav-link">Направления</a>-->
+                    <a href="{% url 'main_page' %}" class="nav-item nav-link">Главная страница</a>
+                    <a href="{% url 'about_us' %}" class="nav-item nav-link active" style="white-space: nowrap;">О нас</a>
                     <a href="{% url 'all_excursion' %}" class="nav-item nav-link">Экскурсии</a>
                     <a href="contact.html" class="nav-item nav-link">Контакты</a>
                 </div>

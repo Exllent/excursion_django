@@ -15,7 +15,7 @@
                 <img class="w-100" src="{% static '/logic_app/images/carousel-1.jpg' %}" alt="Image">
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Туры & Экскурсии</h4>
+                        <h4 class="text-white text-uppercase mb-md-3">Экскурсии</h4>
                         <h1 class="display-3 text-white mb-md-4">Давайте откроем мир вместе</h1>
                         <a href="" class="btn btn-primary py-md-3 px-md-5 mt-2">Забронировать</a>
                     </div>
@@ -48,49 +48,13 @@
 <!-- Carousel End -->
 
 
-{% show_destination categories %}
+{% show_destination context_data.categories %}
 
 
-<!-- Service Start -->
-<div class="container-fluid py-5">
-    <div class="container pt-5 pb-3">
-        <div class="text-center mb-3 pb-3">
-            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Сервис</h6>
-            <h1>Туры & Туристические услуги</h1>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                    <i class="fa fa-2x fa-route mx-auto mb-4"></i>
-                    <h5 class="mb-2">Путеводитель</h5>
-                    <p class="m-0">Путеводитель предлагает разнообразные маршруты, каждый
-                        из них уникален и позволяет туристам наслаждаться разнообразием красот и
-                        впечатлений.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                    <i class="fa fa-2x fa-ticket-alt mx-auto mb-4"></i>
-                    <h5 class="mb-2">Бронирование билетов</h5>
-                    <p class="m-0">Бронируйте билеты на экскурсии легко и быстро онлайн с нами! Гарантированные
-                        места и удобный онлайн процесс бронирования делают путешествие приятным.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="service-item bg-white text-center mb-2 py-5 px-4">
-                    <i class="fa fa-2x fa-hotel mx-auto mb-4"></i>
-                    <h5 class="mb-2">Остановки</h5>
-                    <p class="m-0">Наши остановки находятся рядом с отелями. Вам будет предоставлен адрес и
-                        геолокация ближайшей остановки, чтобы ваше
-                        путешествие началось с удобства и комфорта.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Service End -->
+{% include 'logic_app/includes/serv.html' %}
 
-{% show_package excursion %}
+
+{% show_package context_data.excursions %}
 
 <div class="text-center">
     <a href="{% url 'all_excursion' %}" class="btn btn-primary py-md-3 px-md-5 mt-2">Открыть все экскурсии</a>

@@ -13,6 +13,7 @@
     shape-margin: 20px; /* Расстояние между текстом и картинкой */
 }
 
+
 .text-container-h4 {
     word-break: normal; /* По умолчанию */
 }
@@ -34,3 +35,25 @@
 }
 
 
+.search-form {
+    position: relative;
+    border: 1px solid #7AB730; /* Зелёные границы */
+    border-radius: 10px; /* Округление углов */
+    max-width: 200px;
+    overflow: hidden; /* Скрытие части значка за границами формы */
+}
+
+.search-input {
+    width: calc(100% - 32px); /* Ширина поля ввода с учётом размера значка и отступа */
+    padding: 6px; /* Внутренний отступ */
+    border: none; /* Убираем стандартные границы у поля ввода */
+    outline: none; /* Убираем рамку при фокусе */
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
