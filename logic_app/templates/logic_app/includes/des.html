@@ -1,3 +1,4 @@
+{% load owner_tags %}
 <!-- Destination Start -->
 <div class="container-fluid py-3">
     <div class="container pt-3 pb-3">
@@ -14,11 +15,11 @@
                        href="{{ category.get_absolute_url }}">
                         <h5 class="text-white">{{ category.title }}</h5>
                         {% if category.excursion_count == 1 %}
-                        <span>{{ category.excursion_count }} Тур</span>
+                        <span>Одна экскурсия</span>
                         {% elif category.excursion_count < 5 %}
-                        <span>{{ category.excursion_count }} Тура</span>
+                        <span>{% digit_to_text category.excursion_count True %} экскурсии</span>
                         {% else %}
-                        <span>{{ category.excursion_count }} Туров</span>
+                        <span>{% digit_to_text category.excursion_count True %} экскурсий</span>
                         {% endif %}
                     </a>
                 </div>

@@ -24,6 +24,10 @@ class Validators:
         MinValueValidator(0, message="Минимальное значение процента скидки 0"),
         MaxValueValidator(90, message="Максимальное значение процента скидки 90")
     ]
+    duration_validators = [
+        MinValueValidator(1, message="Минимальное значение продолжительности экскурсии"),
+        MaxValueValidator(24, message="Максимальное значение продолжительности экскурсии"),
+    ]
 
 
 class Excursion(models.Model):
@@ -42,6 +46,9 @@ class Excursion(models.Model):
     title = models.CharField(max_length=75, verbose_name="Название Экскурсии", validators=Validators.title_validators)
     slug = models.SlugField(max_length=75, unique=True, db_index=True, verbose_name="Slug",
                             validators=Validators.slug_validators)
+    duration = models.FloatField(verbose_name="Продолжительность экскурсии", default=1,
+                                 validators=Validators.duration_validators)
+    geo = models.CharField(max_length=35, verbose_name="Гео экскурсии", default="Сочи-Адлер")
     price = models.IntegerField(verbose_name="Цена", validators=Validators.price_validators)
     discount = models.IntegerField(default=0, verbose_name="Скидка (%)",
                                    validators=Validators.discount_validators, choices=choices_discount)
@@ -65,7 +72,7 @@ class Excursion(models.Model):
 
     @classmethod
     def get_tour_with_locations_by_slug(cls, slug: str):
-        return cls.objects.prefetch_related('location').get(slug=slug)
+        return cls.objects.prefetch_related('location').filter(slug=slug)
 
     @classmethod
     def get_tours_by_category_slug(cls, slug: str):

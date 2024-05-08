@@ -14,7 +14,7 @@ def show_package(excursion: list):
 
 
 @register.simple_tag()
-def digit_to_text(digit: int):
+def digit_to_text(digit: int, capitalize: bool = False):
     numbers_dict = {
         1: "одну",
         2: "две",
@@ -47,4 +47,5 @@ def digit_to_text(digit: int):
         29: "двадцать девять",
         30: "тридцать"
     }
-    return numbers_dict[digit]
+    return numbers_dict[digit].capitalize() if capitalize is True else numbers_dict[digit]
+

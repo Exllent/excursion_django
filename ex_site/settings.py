@@ -20,16 +20,17 @@ config = dotenv_values(f"{BASE_DIR}/.env")
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'localhost',
-    '127.0.0.1:8000'
+    '192.168.1.109',
+    '192.168.1.109:8000',
 ]
+
 INTERNAL_IPS = ["127.0.0.1"]
 
 # Application definition
@@ -84,12 +85,12 @@ WSGI_APPLICATION = 'ex_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': config["ENGINE"],
-        'NAME': config["NAME"],
-        'USER': config["USER"],
-        'PASSWORD': config["PASSWORD"],
-        'HOST': config["HOST"],
-        'PORT': config["PORT"],
+        'ENGINE': config['ENGINE'],
+        'NAME': config['NAME'],
+        'USER': config['USER'],
+        'PASSWORD': config['PASSWORD'],
+        'HOST': config['HOST'],
+        'PORT': config['PORT'],
     }
 }
 

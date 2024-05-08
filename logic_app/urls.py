@@ -7,5 +7,4 @@ urlpatterns = [
     path('excursion', Tours.as_view(), name='all_excursion'),
     path('<slug:excursion_slug>', ShowTour.as_view(), name='excursion'),
     path('destination/<slug:category_slug>', Destination.as_view(), name='destination'),
-
 ]
