@@ -1,4 +1,5 @@
 {% load owner_tags %}
+
 <!-- Packages Start -->
 <div class="container-fluid py-3" style="padding-bottom: 1px !important;">
     <div class="container pt-3 pb-3" style="padding-bottom: 1px !important;">
@@ -13,8 +14,7 @@
                     <img class="img-fluid" src="{{ excursion_data.header_photo.url }}" alt="">
                     <div class="p-4">
                         <div class="d-flex justify-content-between mb-3">
-                            <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>Сочи -
-                                Адлер</small>
+                            <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ excursion_data.geo }}</small>
 
                             <small>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
@@ -22,8 +22,10 @@
                                      class="bi bi-clock-fill" viewBox="0 0 16 16">
                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                                 </svg>
+
+
                                 <a>
-                                    12 Часов
+                                    {% get_hours excursion_data.duration %}
                                 </a>
                             </small>
                         </div>

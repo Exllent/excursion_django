@@ -7,11 +7,12 @@ from .models import Excursion, Category, Location
 @admin.register(Excursion)
 class ExcursionAdmin(admin.ModelAdmin):
     fields = (
-        "title", "slug", "description", "price", "discount", "header_photo", "show_image", "is_published", "top",
+        "title", "slug", "duration", "geo", "description", "price", "discount", "header_photo", "show_image",
+        "is_published", "top",
         "category",
         "location")
     readonly_fields = ("slug", "show_image")
-    list_display = ("show_image", "title", "slug", "price", "discount", "is_published", "top")
+    list_display = ("show_image", "title", "slug", "duration", "geo", "price", "discount", "is_published", "top")
     list_display_links = ("title", "show_image")
     list_editable = ("is_published", "top", "discount", "price")
     list_per_page = 5

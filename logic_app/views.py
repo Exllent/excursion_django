@@ -21,7 +21,7 @@ class MainPage(ListView):
 class Destination(ListView):
     template_name = "logic_app/package.html"
     context_object_name = "excursions"
-    extra_context = {'title': 'Популярные направления'}
+    extra_context = {'title': 'Направления'}
 
     def get_queryset(self) -> QuerySet:
         return Excursion.get_tours_by_category_slug(slug=self.kwargs["category_slug"])
@@ -31,6 +31,7 @@ class Tours(ListView):
     template_name = "logic_app/package.html"
     queryset = Excursion.published.all()
     context_object_name = "excursions"
+    extra_context = {'title': 'Экскурсии'}
 
 
 class ShowTour(View):
@@ -56,7 +57,7 @@ class ShowTour(View):
 
 
 def about_us(request: HttpRequest) -> HttpResponse:
-    return render(request, template_name="logic_app/about.html")
+    return render(request, template_name="logic_app/about.html", context={"title": "О нас"})
 
 
 def page_not_found(request, exception) -> HttpResponseNotFound:

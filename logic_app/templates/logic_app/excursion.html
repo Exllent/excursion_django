@@ -21,53 +21,7 @@
 </div>
 
 
-
-
-<!-- Booking Start -->
-<form action="" method="post">
-<div class="container-fluid booking mt-5 pb-5">
-    <div class="container pb-5">
-        <div class="bg-light shadow" style="padding: 30px;">
-            <div class="row align-items-center" style="min-height: 60px;">
-                {% csrf_token %}
-                <div class="col-md-10">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-                                {{ form.quantity_person }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-                                <div class="date" id="date1" data-target-input="nearest">
-                                    {{ form.date_excursion }}
-<!--                                    <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Дата экскурсии" data-target="#date1" data-toggle="datetimepicker"/>-->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-<!--                                <input type="tel" id="phone" class="form-control p-4" name="phone" placeholder="Номер телефона" required pattern="[0-9]{10}">-->
-                                {{ form.number_phone }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Забронировать</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</form>
-<!-- Booking End -->
-
-
-
-
-
-
+{% include 'logic_app/includes/booking.html' %}
 
 
 <!-- Blog Start -->
@@ -97,83 +51,85 @@
                         <h2 class="mb-3">{{ excursion.title }}</h2>
                         <p>{{ excursion.description }}</p>
                         {% for location in locations %}
-                            <h4 class="mb-3" style="max-height: 250px; max-width: 350px;">{{ location.title }}</h4>
-                            <img class="img-fluid w-50 {% cycle 'float-left mr-4' 'float-right ml-4' %} mb-2"
-                                 src="{{ location.location_photo.url }}" style="max-height: 250px; max-width: 350px;" >
-                            <p>{{ location.short_info }}</p>
+                        <h4 class="mb-3" style="max-height: 250px; max-width: 350px;">{{ location.title }}</h4>
+                        <img class="img-fluid w-50 {% cycle 'float-left mr-4' 'float-right ml-4' %} mb-2"
+                             src="{{ location.location_photo.url }}" style="max-height: 250px; max-width: 350px;">
+                        <p>{{ location.short_info }}</p>
                         {% endfor %}
                     </div>
                 </div>
+
+                {% include 'logic_app/includes/booking.html' %}
                 <!-- Blog Detail End -->
 
-<!--                &lt;!&ndash; Comment List Start &ndash;&gt;-->
-<!--                <div class="bg-white" style="padding: 30px; margin-bottom: 30px;">-->
-<!--                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">3 Comments</h4>-->
-<!--                    <div class="media mb-4">-->
-<!--                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">-->
-<!--                        <div class="media-body">-->
-<!--                            <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
-<!--                            <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor labore-->
-<!--                                accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.-->
-<!--                                Gubergren clita aliquyam consetetur sadipscing, at tempor amet ipsum diam tempor-->
-<!--                                consetetur at sit.</p>-->
-<!--                            <button class="btn btn-sm btn-outline-primary">Reply</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="media">-->
-<!--                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">-->
-<!--                        <div class="media-body">-->
-<!--                            <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
-<!--                            <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor labore-->
-<!--                                accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.-->
-<!--                                Gubergren clita aliquyam consetetur sadipscing, at tempor amet ipsum diam tempor-->
-<!--                                consetetur at sit.</p>-->
-<!--                            <button class="btn btn-sm btn-outline-primary">Reply</button>-->
-<!--                            <div class="media mt-4">-->
-<!--                                <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1"-->
-<!--                                     style="width: 45px;">-->
-<!--                                <div class="media-body">-->
-<!--                                    <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
-<!--                                    <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor-->
-<!--                                        labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed-->
-<!--                                        eirmod ipsum. Gubergren clita aliquyam consetetur sadipscing, at tempor amet-->
-<!--                                        ipsum diam tempor consetetur at sit.</p>-->
-<!--                                    <button class="btn btn-sm btn-outline-primary">Reply</button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; Comment List End &ndash;&gt;-->
+                <!--                &lt;!&ndash; Comment List Start &ndash;&gt;-->
+                <!--                <div class="bg-white" style="padding: 30px; margin-bottom: 30px;">-->
+                <!--                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">3 Comments</h4>-->
+                <!--                    <div class="media mb-4">-->
+                <!--                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">-->
+                <!--                        <div class="media-body">-->
+                <!--                            <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
+                <!--                            <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor labore-->
+                <!--                                accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.-->
+                <!--                                Gubergren clita aliquyam consetetur sadipscing, at tempor amet ipsum diam tempor-->
+                <!--                                consetetur at sit.</p>-->
+                <!--                            <button class="btn btn-sm btn-outline-primary">Reply</button>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="media">-->
+                <!--                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">-->
+                <!--                        <div class="media-body">-->
+                <!--                            <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
+                <!--                            <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor labore-->
+                <!--                                accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.-->
+                <!--                                Gubergren clita aliquyam consetetur sadipscing, at tempor amet ipsum diam tempor-->
+                <!--                                consetetur at sit.</p>-->
+                <!--                            <button class="btn btn-sm btn-outline-primary">Reply</button>-->
+                <!--                            <div class="media mt-4">-->
+                <!--                                <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1"-->
+                <!--                                     style="width: 45px;">-->
+                <!--                                <div class="media-body">-->
+                <!--                                    <h6><a href="">John Doe</a> <small><i>01 Jan 2045</i></small></h6>-->
+                <!--                                    <p>Diam amet duo labore stet elitr invidunt ea clita ipsum voluptua, tempor-->
+                <!--                                        labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed-->
+                <!--                                        eirmod ipsum. Gubergren clita aliquyam consetetur sadipscing, at tempor amet-->
+                <!--                                        ipsum diam tempor consetetur at sit.</p>-->
+                <!--                                    <button class="btn btn-sm btn-outline-primary">Reply</button>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--                &lt;!&ndash; Comment List End &ndash;&gt;-->
 
-<!--                &lt;!&ndash; Comment Form Start &ndash;&gt;-->
-<!--                <div class="bg-white mb-3" style="padding: 30px;">-->
-<!--                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Leave a comment</h4>-->
-<!--                    <form>-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="name">Name *</label>-->
-<!--                            <input type="text" class="form-control" id="name">-->
-<!--                        </div>-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="email">Email *</label>-->
-<!--                            <input type="email" class="form-control" id="email">-->
-<!--                        </div>-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="website">Website</label>-->
-<!--                            <input type="url" class="form-control" id="website">-->
-<!--                        </div>-->
+                <!--                &lt;!&ndash; Comment Form Start &ndash;&gt;-->
+                <!--                <div class="bg-white mb-3" style="padding: 30px;">-->
+                <!--                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Leave a comment</h4>-->
+                <!--                    <form>-->
+                <!--                        <div class="form-group">-->
+                <!--                            <label for="name">Name *</label>-->
+                <!--                            <input type="text" class="form-control" id="name">-->
+                <!--                        </div>-->
+                <!--                        <div class="form-group">-->
+                <!--                            <label for="email">Email *</label>-->
+                <!--                            <input type="email" class="form-control" id="email">-->
+                <!--                        </div>-->
+                <!--                        <div class="form-group">-->
+                <!--                            <label for="website">Website</label>-->
+                <!--                            <input type="url" class="form-control" id="website">-->
+                <!--                        </div>-->
 
-<!--                        <div class="form-group">-->
-<!--                            <label for="message">Message *</label>-->
-<!--                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>-->
-<!--                        </div>-->
-<!--                        <div class="form-group mb-0">-->
-<!--                            <input type="submit" value="Leave a comment"-->
-<!--                                   class="btn btn-primary font-weight-semi-bold py-2 px-3">-->
-<!--                        </div>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; Comment Form End &ndash;&gt;-->
+                <!--                        <div class="form-group">-->
+                <!--                            <label for="message">Message *</label>-->
+                <!--                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>-->
+                <!--                        </div>-->
+                <!--                        <div class="form-group mb-0">-->
+                <!--                            <input type="submit" value="Leave a comment"-->
+                <!--                                   class="btn btn-primary font-weight-semi-bold py-2 px-3">-->
+                <!--                        </div>-->
+                <!--                    </form>-->
+                <!--                </div>-->
+                <!--                &lt;!&ndash; Comment Form End &ndash;&gt;-->
             </div>
         </div>
     </div>

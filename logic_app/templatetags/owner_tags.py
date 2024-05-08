@@ -49,3 +49,16 @@ def digit_to_text(digit: int, capitalize: bool = False):
     }
     return numbers_dict[digit].capitalize() if capitalize is True else numbers_dict[digit]
 
+
+@register.simple_tag()
+def get_hours(digit: float) -> str:
+    if digit.is_integer():
+        hour = int(digit)
+    else:
+        hour = digit
+    if hour == 1:
+        return f"{hour} час"
+    elif hour < 5:
+        return f"{hour} часа"
+    else:
+        return f"{hour} часов"
