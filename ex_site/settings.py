@@ -15,7 +15,7 @@ from dotenv import dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-config = dotenv_values(f"{BASE_DIR}/.env")
+config = dotenv_values(f"{BASE_DIR}/.env.dev")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -23,13 +23,9 @@ config = dotenv_values(f"{BASE_DIR}/.env")
 SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(config['DEBUG'])
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '192.168.1.109',
-    '192.168.1.109:8000',
-]
+ALLOWED_HOSTS = config['ALLOWED_HOSTS'].split(' ')
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -90,7 +86,7 @@ DATABASES = {
         'USER': config['USER'],
         'PASSWORD': config['PASSWORD'],
         'HOST': config['HOST'],
-        'PORT': config['PORT'],
+        'PORT': 5432,
     }
 }
 
@@ -136,3 +132,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}

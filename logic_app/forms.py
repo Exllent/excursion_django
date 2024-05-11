@@ -20,18 +20,35 @@ class Application(forms.Form):
         (5, 'Пятеро'),
         (6, 'Больше'),
     ]
-    quantity_person = forms.ChoiceField(choices=CHOICES, widget=forms.Select(
-        attrs={'class': 'custom-select px-4', 'style': 'height: 47px;'}),
-                                        )
-    date_excursion = forms.CharField(widget=forms.DateInput(
-        attrs={'class': 'form-control p-4 datetimepicker-input', 'type': 'date',
-               'min': current_date_msk(),
-               'max': current_date_msk() + timedelta(days=365),
-               }))
+    quantity_person = forms.ChoiceField(
+        choices=CHOICES,
+        
+        validators=[MinValueValidator('1')],
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select px-4',
+                'style': 'height: 47px;'
+            }
+        )
+    )
+    date_excursion = forms.CharField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control p-4 datetimepicker-input',
+                'type': 'date',
+                'min': current_date_msk(),
+                'max': current_date_msk() + timedelta(days=365),
+            }
+        )
+    )
 
     number_phone = forms.CharField(
         validators=[RegexValidator(regex=r'^\+?\d{9,15}$', message='Введите корректный номер телефона.')],
         widget=forms.TextInput(
-            attrs={'type': 'tel', 'id': 'phone', 'class': 'form-control p-4',
-                   'name': 'phone',
-                   'placeholder': 'Номер телефона'}))
+            attrs={
+                'type': 'tel', 'id': 'phone', 'class': 'form-control p-4',
+                'name': 'phone',
+                'placeholder': 'Номер телефона'
+            }
+        )
+    )

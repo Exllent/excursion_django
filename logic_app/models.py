@@ -7,7 +7,9 @@ from pytils.translit import slugify
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().annotate(location_count=Count('location__id')).filter(is_published=True)
+        return (super().get_queryset()
+                .annotate(location_count=Count('location__id'))
+                .filter(is_published=True).order_by('pk'))
 
 
 class Validators:
