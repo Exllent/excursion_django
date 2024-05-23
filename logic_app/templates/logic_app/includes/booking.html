@@ -1,37 +1,92 @@
-<!-- Booking Start -->
-<form action="" method="post">
-<div class="container-fluid booking mt-5 pb-5">
-    <div class="container pb-5">
-        <div class="bg-light shadow" style="padding: 30px;">
-            <div class="row align-items-center" style="min-height: 60px;">
-                {% csrf_token %}
-                <div class="col-md-10">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-                                {{ form.quantity_person }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-                                <div class="date" id="date1" data-target-input="nearest">
-                                    {{ form.date_excursion }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-4 mb-md-0">
-                                {{ form.number_phone }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Забронировать</button>
-                </div>
-            </div>
-        </div>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экскурсии</title>
+    <link rel="stylesheet" href="{% static '/logic_app/css/styles.css' %}">
+</head>
+<body>
+<div class="content">
+    <div class="text-center">
+        <button data-target="#modal" class="bookButton btn btn-primary py-md-3 px-md-5 mt-2">Забронировать</button>
     </div>
 </div>
-</form>
-<!-- Booking End -->
+<style>
+.form-error {
+    color: rgb(122, 183, 48);
+    margin-right: 140px;
+    flex: 0 0 200px;
+}
+</style>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1>Форма заявки</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }} {{ form.name }}
+                <div class="form-error">{{ form.name.errors }}</div>
+            </div>
+            <div class="form-group">
+                {{ form.date_excursion.label_tag }} {{ form.date_excursion }}
+            </div>
+            <div class="form-group">
+                {{ form.number_phone.label_tag }} {{ form.number_phone }}
+                <div class="form-error">{{ form.number_phone.errors }}</div>
+            </div>
+            <div class="form-group">
+                {{ form.people.label_tag }} <span id="rangeValue"></span> {{ form.people }}
+            </div>
+            <div class="form-group">
+                {{ form.comments.label_tag }} {{ form.comments }}
+            </div>
+            <div class="text-center">
+                <button data-method="GET" data-target="#modal" class="bookButton btn btn-primary py-md-3 px-md-5 mt-2">Забронировать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Check if there are form errors and open modal if so
+        const formHasErrors = {{ form.errors|yesno:"true,false" }};
+
+        if (formHasErrors) {
+            document.getElementById('modal').style.display = 'block';
+        }
+    });
+    document.addEventListener('DOMContentLoaded', (event) => {
+    var modals = document.querySelectorAll('.modal');
+    var btns = document.querySelectorAll('.bookButton');
+    var spans = document.querySelectorAll('.close');
+
+    btns.forEach(function(btn) {
+        btn.onclick = function() {
+            var modal = document.querySelector(btn.getAttribute('data-target'));
+            modal.style.display = 'block';
+        };
+    });
+
+    spans.forEach(function(span) {
+        span.onclick = function() {
+            span.closest('.modal').style.display = 'none';
+        };
+    });
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    };
+    const formHasErrors = document.querySelector('.form-error');
+});
+</script>
+<script src="{% static '/logic_app/js/range_scripts.js' %}"></script>
+</body>
+</html>

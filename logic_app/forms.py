@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import RegexValidator, MinValueValidator
+from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 from pytz import timezone
 from datetime import datetime, timedelta
 
@@ -11,27 +11,20 @@ def current_date_msk():
 
 
 class Application(forms.Form):
-    CHOICES = [
-        (0, 'Сколько человек'),
-        (1, 'Один'),
-        (2, 'Двое'),
-        (3, 'Трое'),
-        (4, 'Четверо'),
-        (5, 'Пятеро'),
-        (6, 'Больше'),
-    ]
-    quantity_person = forms.ChoiceField(
-        choices=CHOICES,
-        
-        validators=[MinValueValidator('1')],
-        widget=forms.Select(
+    name = forms.CharField(
+        label='Ваше имя',
+        validators=[
+            MinLengthValidator(2, message='Имя слишком короткое'),
+            MaxLengthValidator(50, message='Имя слишком длинное'),
+        ],
+        widget=forms.TextInput(
             attrs={
-                'class': 'custom-select px-4',
-                'style': 'height: 47px;'
+                'class': 'form-control p-4',
             }
         )
     )
     date_excursion = forms.CharField(
+        label="Дата экскурсии",
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control p-4 datetimepicker-input',
@@ -41,14 +34,44 @@ class Application(forms.Form):
             }
         )
     )
-
     number_phone = forms.CharField(
-        validators=[RegexValidator(regex=r'^\+?\d{9,15}$', message='Введите корректный номер телефона.')],
+        label='Номер телефона',
+        validators=[
+            RegexValidator(
+                regex=r'^\+?\d{8,15}$',
+                message='неправильный номер'
+            )
+        ],
         widget=forms.TextInput(
             attrs={
-                'type': 'tel', 'id': 'phone', 'class': 'form-control p-4',
+                'type': 'tel',
+                'id': 'phone',
+                'class': 'form-control p-4',
                 'name': 'phone',
-                'placeholder': 'Номер телефона'
+            }
+        )
+    )
+    people = forms.IntegerField(
+        label="Сколько вас будет",
+        widget=forms.NumberInput(
+            attrs={
+                'type': 'range',
+                'min': '1',
+                'max': '11',
+                'step': '1',
+                'id': 'customRange3',
+                'style': 'color: rgb(122, 183, 48);'
+            }
+        )
+    )
+    comments = forms.CharField(
+        label='Оставить пожелание',
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'rows': 3,
+                'style': 'resize:none;',
+                'class': 'form-control p-4',
             }
         )
     )

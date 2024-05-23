@@ -1,6 +1,12 @@
 from django import template
-
+from django.forms.forms import Form
+from ..forms import Application
 register = template.Library()
+
+
+@register.inclusion_tag('logic_app/includes/carousel.html')
+def show_carousel(form: Form | None = None):
+    return {'form': form}
 
 
 @register.inclusion_tag("logic_app/includes/des.html")

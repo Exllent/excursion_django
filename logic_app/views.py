@@ -42,7 +42,6 @@ class Destination(ListView):
 
 class Tours(ListView):
     template_name = "logic_app/package.html"
-    # queryset = Excursion.published.all()
     context_object_name = "excursions"
     extra_context = {'title': 'Экскурсии в Сочи'}
     paginate_by = 6
@@ -60,11 +59,11 @@ class Tours(ListView):
 class ShowTour(View):
     template_name = "logic_app/excursion.html"
 
-    def get(self, request: HttpRequest, excursion_slug: str):
+    @staticmethod
+    def get_context(excursion_slug):
         tour_cache = cache.get(excursion_slug)
         if tour_cache:
-            tour_cache["form"] = Application()
-            return render(request, self.template_name, tour_cache)
+            return tour_cache
         else:
             excursion = get_object_or_404(Excursion.get_tour_with_locations_by_slug(excursion_slug))
             context = {
@@ -72,17 +71,21 @@ class ShowTour(View):
                 "locations": excursion.location.all(),
             }
             cache.set(excursion_slug, context, 60 * 10)
-            context["form"] = Application()
-            return render(request, self.template_name, context)
+            return context
+
+    def get(self, request: HttpRequest, excursion_slug: str):
+        context = self.get_context(excursion_slug)
+        context['form'] = Application()
+        return render(request, self.template_name, context)
 
     def post(self, request: HttpRequest, excursion_slug: str):
         form = Application(request.POST)
         if form.is_valid():
-            print(form.cleaned_data, 'sssssssssssssssssssssssssss')
-            print(excursion_slug, 'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+            return HttpResponse("<h1>Hello<h1/>")
         else:
-            print(form.errors)
-        return HttpResponse("<h1>Hello<h1/>")
+            context = self.get_context(excursion_slug)
+            context['form'] = form
+            return render(request, template_name=self.template_name, context=context)
 
 
 def about_us(request: HttpRequest) -> HttpResponse:
