@@ -1,10 +1,12 @@
 from django.db.models import QuerySet
 from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
 from django.core.cache import cache
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, View
+from django.contrib import messages
 from .models import Category, Excursion
 from .forms import Application
+from .tasks import send_message_in_chat_tg
 
 
 class MainPage(ListView):
@@ -81,7 +83,26 @@ class ShowTour(View):
     def post(self, request: HttpRequest, excursion_slug: str):
         form = Application(request.POST)
         if form.is_valid():
-            return HttpResponse("<h1>Hello<h1/>")
+            ex = Excursion.get_title_by_slug(excursion_slug)
+            data = form.cleaned_data
+            send_message_in_chat_tg.delay(
+                f"Экскурсия: {ex.title}\n"
+                f"Цена экскурсии: {ex.price}\n"
+                f"Имя: {data['name']}\n"
+                f"Дата экскурсии: {data['date_excursion']}\n"
+                f"Номер телефона: {data['number_phone']}\n"
+                f"Количество человек: {data['people']}\n"
+                f"Пожелание: {data['comments']}"
+            )
+            message = (
+                f"{data['name']}, вы успешно забронировали места на экскурсию {ex.title}. "
+                f"Желаем вам хорошего время провождения! "
+                f"С уважением, команда ЭТОСИРИУС.\n\n"
+                f"Кстати, у нас есть множество других захватывающих экскурсий, которые также могут вас заинтересовать. "
+                f"Не забудьте снова заглянуть на наш сайт, чтобы узнать больше!"
+            )
+            messages.success(request, message)
+            return redirect('excursion', excursion_slug=excursion_slug)
         else:
             context = self.get_context(excursion_slug)
             context['form'] = form

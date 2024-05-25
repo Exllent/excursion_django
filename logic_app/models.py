@@ -69,6 +69,10 @@ class Excursion(models.Model):
     published = PublishedManager()
 
     @classmethod
+    def get_title_by_slug(cls, slug: str):
+        return cls.objects.get(slug=slug)
+
+    @classmethod
     def get_tours_with_count_location(cls):
         return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, top=True)
 
