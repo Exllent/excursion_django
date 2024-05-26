@@ -1,16 +1,9 @@
 from django import forms
 from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
-from pytz import timezone
-from datetime import datetime, timedelta
+from .utils import current_date_msk_with_timedelta, current_date_msk
 
 
-def current_date_msk():
-    current_datetime_utc = datetime.utcnow()
-    current_datetime_msk = timezone('Europe/Moscow').localize(current_datetime_utc)
-    return current_datetime_msk.date()
-
-
-class Application(forms.Form):
+class BookingForm(forms.Form):
     name = forms.CharField(
         label='Ваше имя',
         validators=[
@@ -30,7 +23,7 @@ class Application(forms.Form):
                 'class': 'form-control p-4 datetimepicker-input',
                 'type': 'date',
                 'min': current_date_msk(),
-                'max': current_date_msk() + timedelta(days=365),
+                'max': current_date_msk_with_timedelta(days=365),
             }
         )
     )
@@ -64,7 +57,7 @@ class Application(forms.Form):
             }
         )
     )
-    comments = forms.CharField(
+    wishes = forms.CharField(
         label='Оставить пожелание',
         required=False,
         widget=forms.Textarea(

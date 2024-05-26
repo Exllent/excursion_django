@@ -1,12 +1,13 @@
 from django.db.models import QuerySet
-from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
+from django.http import HttpResponseNotFound, HttpRequest, HttpResponse, JsonResponse
 from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, View
 from django.contrib import messages
-from .models import Category, Excursion
-from .forms import Application
+from .models import Category, Excursion, Booking, Review
+from .forms import BookingForm
 from .tasks import send_message_in_chat_tg
+from .utils import current_datetime_msk
 
 
 class MainPage(ListView):
@@ -68,45 +69,92 @@ class ShowTour(View):
             return tour_cache
         else:
             excursion = get_object_or_404(Excursion.get_tour_with_locations_by_slug(excursion_slug))
+            reviews = excursion.reviews.order_by('-created_at')
             context = {
                 "excursion": excursion,
                 "locations": excursion.location.all(),
+                "reviews": reviews[:3],
+                "len_reviews": len(reviews),
+                "has_more": True if len(reviews) > 3 else False
             }
             cache.set(excursion_slug, context, 60 * 10)
             return context
 
     def get(self, request: HttpRequest, excursion_slug: str):
         context = self.get_context(excursion_slug)
-        context['form'] = Application()
+        context['form'] = BookingForm()
         return render(request, self.template_name, context)
 
     def post(self, request: HttpRequest, excursion_slug: str):
-        form = Application(request.POST)
+        form = BookingForm(request.POST)
         if form.is_valid():
-            ex = Excursion.get_title_by_slug(excursion_slug)
+            ex = Excursion.get_excursion_by_slug(excursion_slug)
             data = form.cleaned_data
+            number_words = {
+                1: 'один человек',
+                2: 'двое человек',
+                3: 'трое человек',
+                4: 'четверо человек',
+                5: 'пятеро человек',
+                6: 'шестеро человек',
+                7: 'семеро человек',
+                8: 'восемеро человек',
+                9: 'девятеро человек',
+                10: 'десятеро человек',
+                11: 'более десяти человек'
+            }
             send_message_in_chat_tg.delay(
                 f"Экскурсия: {ex.title}\n"
-                f"Цена экскурсии: {ex.price}\n"
+                f"Цена : {ex.price}\n"
                 f"Имя: {data['name']}\n"
-                f"Дата экскурсии: {data['date_excursion']}\n"
-                f"Номер телефона: {data['number_phone']}\n"
-                f"Количество человек: {data['people']}\n"
-                f"Пожелание: {data['comments']}"
+                f"Дата : {data['date_excursion']}\n"
+                f"Номер : {data['number_phone']}\n"
+                f"Количество : {number_words[data['people']]}\n"
+                f"Пожелание: {'Без пожелания' if len(data['wishes']) == 0 else data['wishes']}"
             )
             message = (
-                f"{data['name']}, вы успешно забронировали места на экскурсию {ex.title}. "
-                f"Желаем вам хорошего время провождения! "
+                f"{data['name']}, вы успешно забронировали {'места' if data['people'] > 1 else 'место'} на экскурсию {ex.title}. "
+                f"Скоро с вами свяжется наш туроператор, желаем вам хорошего время провождения! "
                 f"С уважением, команда ЭТОСИРИУС.\n\n"
                 f"Кстати, у нас есть множество других захватывающих экскурсий, которые также могут вас заинтересовать. "
                 f"Не забудьте снова заглянуть на наш сайт, чтобы узнать больше!"
             )
+            booking = Booking.objects.create_booking(
+                name=data['name'],
+                phone_number=data['number_phone'],
+                number_of_people=data['people'],
+                wishes=data['wishes'],
+                user_agent=request.META.get("HTTP_USER_AGENT", "unknown"),
+                created_at=current_datetime_msk(),
+                excursion_id=ex
+            )
+            booking.save()
             messages.success(request, message)
             return redirect('excursion', excursion_slug=excursion_slug)
         else:
             context = self.get_context(excursion_slug)
             context['form'] = form
             return render(request, template_name=self.template_name, context=context)
+
+
+def load_more_reviews(request):
+    slug = request.GET.get('slug')
+    page = int(request.GET.get('page', 1))
+    reviews_per_page = 3
+    offset = (page - 1) * reviews_per_page
+
+    excursion = Excursion.objects.get(slug=slug)
+    reviews = Review.objects.filter(excursion_id=excursion.id).order_by('-created_at')[offset:offset + reviews_per_page]
+
+    reviews_list = [{
+        'name': review.name,
+        'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'review': review.review,
+    } for review in reviews]
+
+    has_more = reviews.count() == reviews_per_page
+
+    return JsonResponse({'reviews': reviews_list, 'has_more': has_more})
 
 
 def about_us(request: HttpRequest) -> HttpResponse:

@@ -11,7 +11,6 @@
 {% block content %}
 
 
-
 {% show_carousel form %}
 
 <!-- Blog Start -->
@@ -49,6 +48,56 @@
                     </div>
                     {% include 'logic_app/includes/booking.html' with form=form %}
                 </div>
+
+                {% if len_reviews >= 1 %}
+                <!-- Reviews List Start -->
+                <div class="bg-white" style="padding: 30px; margin-bottom: 30px;">
+                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Три отзыва</h4>
+                    <div id="reviews-container">
+                        {% for review in reviews %}
+                        <div class="media mb-4">
+                            <div class="media-body">
+                                <h6><a href="">{{ review.name }}</a> <small><i>{{ review.created_at }}</i></small></h6>
+                                <p>{{ review.review }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if has_more is True %}
+                    <button id="load-more" data-page="1" data-slug="{{ excursion.slug }}" style="background-color: rgb(122, 183, 48); color: white; border: none; padding: 10px 20px; cursor: pointer;">Загрузить еще</button>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <!-- Reviews List End -->
+                <script>
+                    document.getElementById('load-more').addEventListener('click', function() {
+                        var button = this;
+                        var page = parseInt(button.getAttribute('data-page')) + 1;
+                        var slug = button.getAttribute('data-slug');
+
+                        fetch(`/load-more-reviews/?slug=${slug}&page=${page}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                var container = document.getElementById('reviews-container');
+                                data.reviews.forEach(function(review) {
+                                    var reviewDiv = document.createElement('div');
+                                    reviewDiv.classList.add('media', 'mb-4');
+                                    reviewDiv.innerHTML = `
+                                        <div class="media-body">
+                                            <h6><a href="#">${review.name}</a> <small><i>${review.created_at}</i></small></h6>
+                                            <p>${review.review}</p>
+                                        </div>
+                                    `;
+                                    container.appendChild(reviewDiv);
+                                });
+                                if (data.has_more) {
+                                    button.setAttribute('data-page', page);
+                                } else {
+                                    button.style.display = 'none';
+                                }
+                            });
+                    });
+                </script>
             </div>
         </div>
     </div>

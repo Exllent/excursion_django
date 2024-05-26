@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'ex_site.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': config['ENGINE'],
-        'NAME': config['NAME'],
-        'USER': config['USER'],
-        'PASSWORD': config['PASSWORD'],
-        'HOST': config['HOST'],
-        'PORT': 5432,
+        'NAME': config['POSTGRES_DB'],
+        'USER': config['POSTGRES_USER'],
+        'PASSWORD': config['POSTGRES_PASSWORD'],
+        'HOST': config['POSTGRES_HOST'],
+        'PORT': config["POSTGRES_PORT"],
     }
 }
 
@@ -136,13 +136,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": f"redis://{config['REDIS_HOST']}:{config['REDIS_PORT']}",
     }
 }
 
+
 # Celery settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = f"redis://{config['REDIS_HOST']}:{config['REDIS_PORT']}"
+CELERY_RESULT_BACKEND = f"redis://{config['REDIS_HOST']}:{config['REDIS_PORT']}"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 TELEGRAMM_TOKEN = config['TELEGRAMM_TOKEN']
 GROUP_ID = config["GROUP_ID"]

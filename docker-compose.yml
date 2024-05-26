@@ -12,19 +12,24 @@ services:
     env_file:
       - /home/james/Desktop/Excursion_site/ex_site/.env.dev
     depends_on:
-      - db
+      - excursion_db
+      - redis
 
-
-  db:
+  excursion_db:
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - /home/james/Desktop/Excursion_site/ex_site/.env.dev
-    environment:
-      - POSTGRES_USER=postgres_user
-      - POSTGRES_PASSWORD=postgres_password
-      - POSTGRES_DB=excursion_db
+
+  redis:
+    image: redis:latest
+    restart: always
+    env_file:
+      - /home/james/Desktop/Excursion_site/ex_site/.env.dev
+    volumes:
+      - /path/to/local/dаta:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
 
 volumes:
   postgres_data:

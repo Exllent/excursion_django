@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.core.validators import MaxLengthValidator, MinLengthValidator, MaxValueValidator, MinValueValidator
 from django.db.models import Count
@@ -48,7 +50,7 @@ class Excursion(models.Model):
     title = models.CharField(max_length=75, verbose_name="Название Экскурсии", validators=Validators.title_validators)
     slug = models.SlugField(max_length=75, unique=True, db_index=True, verbose_name="Slug",
                             validators=Validators.slug_validators)
-    duration = models.FloatField(verbose_name="Продолжительность экскурсии", default=1,
+    duration = models.FloatField(verbose_name="Продолжительность (ч)", default=1,
                                  validators=Validators.duration_validators)
     geo = models.CharField(max_length=35, verbose_name="Гео экскурсии", default="Сочи-Адлер")
     price = models.IntegerField(verbose_name="Цена", validators=Validators.price_validators)
@@ -61,7 +63,7 @@ class Excursion(models.Model):
                                        default=False,
                                        verbose_name="Статус")
     top = models.BooleanField(choices=excursion_top, default=False,
-                              verbose_name="Отображение экскурсии на главной странице")
+                              verbose_name="Отображение на главной странице")
     category = models.ManyToManyField("Category", blank=True, related_name='excursion', verbose_name="Категории")
     location = models.ManyToManyField("Location", blank=True, related_name='excursion', verbose_name="Локации")
 
@@ -69,7 +71,7 @@ class Excursion(models.Model):
     published = PublishedManager()
 
     @classmethod
-    def get_title_by_slug(cls, slug: str):
+    def get_excursion_by_slug(cls, slug: str):
         return cls.objects.get(slug=slug)
 
     @classmethod
@@ -78,7 +80,7 @@ class Excursion(models.Model):
 
     @classmethod
     def get_tour_with_locations_by_slug(cls, slug: str):
-        return cls.objects.prefetch_related('location').filter(slug=slug)
+        return cls.objects.prefetch_related('location', 'reviews').filter(slug=slug)
 
     @classmethod
     def get_tours_by_category_slug(cls, slug: str):
@@ -97,6 +99,76 @@ class Excursion(models.Model):
     class Meta:
         verbose_name = "Экскурсию"
         verbose_name_plural = "Экскурсии"
+
+
+class BookingManager(models.Manager):
+
+    def create_booking(
+            self,
+            name: str,
+            phone_number: str,
+            number_of_people: int,
+            wishes: str,
+            user_agent: str,
+            created_at: datetime.datetime,
+            excursion_id: int
+    ):
+        booking = self.create(
+            name=name,
+            phone_number=phone_number,
+            number_of_people=number_of_people,
+            wishes=wishes,
+            user_agent=user_agent,
+            created_at=created_at,
+            excursion_id=excursion_id,
+        )
+        return booking
+
+
+class Booking(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Имя")
+    phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
+    number_of_people = models.PositiveIntegerField(verbose_name="Количество человек")
+    wishes = models.TextField(blank=True, null=True, verbose_name="Пожелания")
+    user_agent = models.CharField(max_length=255, verbose_name="User-Agent")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата бронирования")
+    excursion_id = models.ForeignKey(
+        to="Excursion",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Экскурсия"
+    )
+
+    objects = BookingManager()
+
+    def __str__(self):
+        return f"{self.name} - {self.phone_number}"
+
+    class Meta:
+        verbose_name = "Заявка"
+        verbose_name_plural = "Заявки"
+
+
+class Review(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Имя")
+    review = models.TextField(verbose_name="Отзыв")
+    created_at = models.DateTimeField(verbose_name="Дата отзыва")
+    excursion_id = models.ForeignKey(
+        to="Excursion",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="reviews",
+        verbose_name="Экскурсия"
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.review[:25]}"
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
 
 
 class Category(models.Model):

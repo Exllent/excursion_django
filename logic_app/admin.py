@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 
-from .models import Excursion, Category, Location
+from .models import Excursion, Category, Location, Review, Booking
 
 
 @admin.register(Excursion)
@@ -82,3 +82,33 @@ class LocationAdmin(admin.ModelAdmin):
             return mark_safe(f"<img src={photo.url} width=100>")
         else:
             return "Без фото"
+
+
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    fields = (
+        "name", "phone_number", "number_of_people",
+        "created_at", "user_agent", "wishes",
+        "excursion_id",
+    )
+    readonly_fields = fields
+    list_display = (
+        "name", "phone_number", "number_of_people",
+        "created_at", "excursion_id",
+    )
+    list_display_links = ("name", "phone_number")
+    list_per_page = 10
+    search_fields = ("name", "created_at")
+    list_filter = ("name", "created_at", "excursion_id")
+    save_on_top = True
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    fields = ("name", "review", "created_at", "excursion_id")
+    list_display = ("name", "review", "created_at", "excursion_id")
+    list_display_links = ("name",)
+    list_editable = ("review", "created_at", "excursion_id")
+    list_filter = ("created_at", "excursion_id")
+    list_per_page = 5
+    save_on_top = True

@@ -1,6 +1,6 @@
 from django import template
 from django.forms.forms import Form
-from ..forms import Application
+from ..forms import BookingForm
 register = template.Library()
 
 
