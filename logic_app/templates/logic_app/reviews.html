@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load owner_tags %}
+
+{% block title %}
+<title>{{ excursion.title }} - Экскурсии Сочи</title>
+{% endblock %}
+
+{% block content %}
+
+{% show_carousel %}
+
+<div class="container-fluid py-3" style="padding-bottom: 1px !important;">
+    <div class="container pt-3 pb-3" style="padding-bottom: 1px !important;">
+        <div class="text-center mb-3 pb-3">
+            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Отзывы</h6>
+            <h1>Галерея отзывов с нашими туристами</h1>
+        </div>
+        <div class="row">
+            {% for review in reviews %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="package-item bg-white mb-2">
+                    <img class="img-fluid" src="{{ review.review_photo.url }}" alt="">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

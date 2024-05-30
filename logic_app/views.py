@@ -4,7 +4,7 @@ from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, View
 from django.contrib import messages
-from .models import Category, Excursion, Booking, Review
+from .models import Category, Excursion, Booking, Review, GalleryReview
 from .forms import BookingForm
 from .tasks import send_message_in_chat_tg
 from .utils import current_datetime_msk
@@ -69,7 +69,7 @@ class ShowTour(View):
             return tour_cache
         else:
             excursion = get_object_or_404(Excursion.get_tour_with_locations_by_slug(excursion_slug))
-            reviews = excursion.reviews.order_by('-created_at')
+            reviews = excursion.reviews.order_by('-created_at').all()
             context = {
                 "excursion": excursion,
                 "locations": excursion.location.all(),
@@ -126,7 +126,7 @@ class ShowTour(View):
                 wishes=data['wishes'],
                 user_agent=request.META.get("HTTP_USER_AGENT", "unknown"),
                 created_at=current_datetime_msk(),
-                excursion_id=ex
+                excursion=ex
             )
             booking.save()
             messages.success(request, message)
@@ -153,8 +153,13 @@ def load_more_reviews(request):
     } for review in reviews]
 
     has_more = reviews.count() == reviews_per_page
-
     return JsonResponse({'reviews': reviews_list, 'has_more': has_more})
+
+
+class GalleryReviews(ListView):
+    template_name = "logic_app/reviews.html"
+    model = GalleryReview
+    context_object_name = "reviews"
 
 
 def about_us(request: HttpRequest) -> HttpResponse:

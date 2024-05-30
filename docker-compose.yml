@@ -4,13 +4,14 @@ version: '3.9'
 services:
   web:
     build: ./
-    command: bash -c "python /usr/src/app/manage.py migrate && python /usr/src/app/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - /home/james/Desktop/Excursion_site/ex_site:/usr/src/app/
+      - static_volume:/src/app/static
+      - media_volume:/src/app/media
     ports:
       - 8000:8000
     env_file:
-      - /home/james/Desktop/Excursion_site/ex_site/.env.dev
+      - ./.env.dev
     depends_on:
       - excursion_db
       - redis
@@ -20,16 +21,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - /home/james/Desktop/Excursion_site/ex_site/.env.dev
+      - ./.env.dev
 
   redis:
     image: redis:latest
     restart: always
     env_file:
-      - /home/james/Desktop/Excursion_site/ex_site/.env.dev
+      - ./.env.dev
     volumes:
       - /path/to/local/dаta:/root/redis
       - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:

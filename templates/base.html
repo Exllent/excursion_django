@@ -15,9 +15,10 @@
     <!--    <link href="{% static 'logic_app/images/favicon.ico' %}" rel="icon">-->
 
     <!--     Google Web Fonts -->
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+<!--    &lt;!&ndash; Font Awesome &ndash;&gt;-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <!-- Libraries Stylesheet -->
     <link type="text/css" href="{% static 'logic_app/js/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
@@ -26,6 +27,7 @@
     <link type="text/css" href="{% static 'logic_app/css/owner_style.css' %}" rel="stylesheet"/>
     <!-- Customized Bootstrap Stylesheet -->
     <link type="text/css" href="{% static 'logic_app/css/style.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static '/logic_app/css/styles.css' %}">
 </head>
 <body>
 
@@ -34,6 +36,7 @@
 
 {% block content %}
 {% endblock %}
+
 {% include 'logic_app/includes/footer.html' %}
 </body>
 

@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 from django.core.validators import MaxLengthValidator, MinLengthValidator, MaxValueValidator, MinValueValidator
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.urls import reverse_lazy
 from pytils.translit import slugify
 
@@ -79,8 +79,19 @@ class Excursion(models.Model):
         return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, top=True)
 
     @classmethod
+    def get_tour_with_locations_by_slug2(cls, slug: str):
+        queryset = cls.objects.defer(
+            "slug", "duration", "geo",
+            "discount", "header_photo",
+            "is_published", "top", "category"
+        ).select_related('Review').prefetch_related('location').filter(slug=slug)
+
+    @classmethod
     def get_tour_with_locations_by_slug(cls, slug: str):
-        return cls.objects.prefetch_related('location', 'reviews').filter(slug=slug)
+        return cls.objects.prefetch_related(
+            Prefetch('location'),
+            Prefetch('reviews')
+        ).filter(slug=slug)
 
     @classmethod
     def get_tours_by_category_slug(cls, slug: str):
@@ -111,7 +122,7 @@ class BookingManager(models.Manager):
             wishes: str,
             user_agent: str,
             created_at: datetime.datetime,
-            excursion_id: int
+            excursion: Excursion
     ):
         booking = self.create(
             name=name,
@@ -120,7 +131,7 @@ class BookingManager(models.Manager):
             wishes=wishes,
             user_agent=user_agent,
             created_at=created_at,
-            excursion_id=excursion_id,
+            excursion=excursion,
         )
         return booking
 
@@ -132,7 +143,7 @@ class Booking(models.Model):
     wishes = models.TextField(blank=True, null=True, verbose_name="Пожелания")
     user_agent = models.CharField(max_length=255, verbose_name="User-Agent")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата бронирования")
-    excursion_id = models.ForeignKey(
+    excursion = models.ForeignKey(
         to="Excursion",
         on_delete=models.SET_NULL,
         blank=True,
@@ -154,7 +165,7 @@ class Review(models.Model):
     name = models.CharField(max_length=50, verbose_name="Имя")
     review = models.TextField(verbose_name="Отзыв")
     created_at = models.DateTimeField(verbose_name="Дата отзыва")
-    excursion_id = models.ForeignKey(
+    excursion = models.ForeignKey(
         to="Excursion",
         on_delete=models.SET_NULL,
         blank=True,
@@ -169,6 +180,18 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
+
+
+class GalleryReview(models.Model):
+    review_photo = models.ImageField(upload_to="review_photo/", verbose_name="Скриншот отзыва")
+
+    class Meta:
+        verbose_name = "Скриншот Отзыва"
+        verbose_name_plural = "Скриншоты Отзывов"
+        ordering = ["-pk"]
+
+    def __str__(self):
+        return f"Скриншот {self.pk}"
 
 
 class Category(models.Model):

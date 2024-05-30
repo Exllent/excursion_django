@@ -1,7 +1,7 @@
 FROM python:3.11
 
 
-WORKDIR /home/james/Desktop/Excursion_site/ex_site
+WORKDIR /src/app
 
 ENV PYTHONUNBUFFERED 1
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1

@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 
-from .models import Excursion, Category, Location, Review, Booking
+from .models import Excursion, Category, Location, Review, Booking, GalleryReview
 
 
 @admin.register(Excursion)
@@ -10,7 +10,8 @@ class ExcursionAdmin(admin.ModelAdmin):
         "title", "slug", "duration", "geo", "description", "price", "discount", "header_photo", "show_image",
         "is_published", "top",
         "category",
-        "location")
+        "location"
+    )
     readonly_fields = ("slug", "show_image")
     list_display = ("show_image", "title", "slug", "duration", "geo", "price", "discount", "is_published", "top")
     list_display_links = ("title", "show_image")
@@ -73,6 +74,7 @@ class LocationAdmin(admin.ModelAdmin):
     list_display_links = ("title", "show_image")
     search_fields = ("title",)
     list_filter = ("title",)
+    list_per_page = 6
     save_on_top = True
 
     @admin.display(description="Фото локации")
@@ -89,26 +91,40 @@ class BookingAdmin(admin.ModelAdmin):
     fields = (
         "name", "phone_number", "number_of_people",
         "created_at", "user_agent", "wishes",
-        "excursion_id",
+        "excursion",
     )
     readonly_fields = fields
     list_display = (
         "name", "phone_number", "number_of_people",
-        "created_at", "excursion_id",
+        "created_at", "excursion",
     )
     list_display_links = ("name", "phone_number")
     list_per_page = 10
     search_fields = ("name", "created_at")
-    list_filter = ("name", "created_at", "excursion_id")
+    list_filter = ("name", "created_at", "excursion")
     save_on_top = True
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    fields = ("name", "review", "created_at", "excursion_id")
-    list_display = ("name", "review", "created_at", "excursion_id")
+    fields = ("name", "review", "created_at", "excursion")
+    list_display = ("name", "review", "created_at", "excursion")
     list_display_links = ("name",)
-    list_editable = ("review", "created_at", "excursion_id")
-    list_filter = ("created_at", "excursion_id")
+    list_editable = ("review", "created_at", "excursion")
+    list_filter = ("created_at", "excursion")
     list_per_page = 5
     save_on_top = True
+
+
+@admin.register(GalleryReview)
+class GalleryReviewAdmin(admin.ModelAdmin):
+    fields = ("review_photo", )
+    list_display = ("id", "show_image")
+    readonly_fields = ("show_image",)
+    list_display_links = ("id", "show_image")
+    # list_filter = ("pk",)
+    list_per_page = 10
+
+    @admin.display(description="Скриншот отзыва")
+    def show_image(self, gallery_review: GalleryReview):
+        return mark_safe(f"<img src={gallery_review.review_photo.url} width=100>")
