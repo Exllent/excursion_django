@@ -79,19 +79,8 @@ class Excursion(models.Model):
         return cls.objects.annotate(location_count=Count('location__id')).filter(is_published=True, top=True)
 
     @classmethod
-    def get_tour_with_locations_by_slug2(cls, slug: str):
-        queryset = cls.objects.defer(
-            "slug", "duration", "geo",
-            "discount", "header_photo",
-            "is_published", "top", "category"
-        ).select_related('Review').prefetch_related('location').filter(slug=slug)
-
-    @classmethod
     def get_tour_with_locations_by_slug(cls, slug: str):
-        return cls.objects.prefetch_related(
-            Prefetch('location'),
-            Prefetch('reviews')
-        ).filter(slug=slug)
+        return cls.objects.prefetch_related('location').filter(slug=slug)
 
     @classmethod
     def get_tours_by_category_slug(cls, slug: str):
@@ -184,6 +173,8 @@ class Review(models.Model):
 
 class GalleryReview(models.Model):
     review_photo = models.ImageField(upload_to="review_photo/", verbose_name="Скриншот отзыва")
+
+    objects = models.Manager()
 
     class Meta:
         verbose_name = "Скриншот Отзыва"

@@ -11,7 +11,9 @@
             {% for excursion_data in excursion %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="package-item bg-white mb-2">
-                    <img class="img-fluid" src="{{ excursion_data.header_photo.url }}" alt="">
+                    <a href="{{ excursion_data.get_absolute_url }}">
+                        <img class="img-fluid" src="{{ excursion_data.header_photo.url }}" alt="">
+                    </a>
                     <div class="p-4">
                         <div class="d-flex justify-content-between mb-3">
                             <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>{{ excursion_data.geo }}</small>
@@ -22,8 +24,6 @@
                                      class="bi bi-clock-fill" viewBox="0 0 16 16">
                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                                 </svg>
-
-
                                 <a>
                                     {% get_hours excursion_data.duration %}
                                 </a>

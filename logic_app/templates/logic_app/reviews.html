@@ -17,8 +17,8 @@
             <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Отзывы</h6>
             <h1>Галерея отзывов с нашими туристами</h1>
         </div>
-        <div class="row">
-            {% for review in reviews %}
+        <div class="row" id="reviews-container">
+            {% for review in page_obj %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="package-item bg-white mb-2">
                     <img class="img-fluid" src="{{ review.review_photo.url }}" alt="">
@@ -26,7 +26,49 @@
             </div>
             {% endfor %}
         </div>
+        {% if page_obj.has_next %}
+
+        <div class="text-center">
+            <button id="load-more" class="btn btn-primary py-md-3 px-md-5 mt-2" data-next-page="{{ page_obj.next_page_number }}">Загрузить ещё</button>
+        </div>
+
+<!--        <div class="text-center mt-4">-->
+<!--            <button id="load-more" class="btn btn-primary" data-next-page="{{ page_obj.next_page_number }}">Load More-->
+<!--            </button>-->
+<!--        </div>-->
+        {% endif %}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loadMoreButton = document.getElementById('load-more');
+
+        loadMoreButton.addEventListener('click', function () {
+            const nextPage = this.getAttribute('data-next-page');
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '?page=' + nextPage, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(xhr.responseText, 'text/html');
+                    const newReviews = doc.querySelectorAll('#reviews-container .col-lg-4');
+                    const reviewsContainer = document.getElementById('reviews-container');
+                    newReviews.forEach(function (review) {
+                        reviewsContainer.appendChild(review);
+                    });
+
+                    const newButton = doc.querySelector('#load-more');
+                    if (newButton) {
+                        loadMoreButton.setAttribute('data-next-page', newButton.getAttribute('data-next-page'));
+                    } else {
+                        loadMoreButton.remove();
+                    }
+                }
+            };
+            xhr.send();
+        });
+    });
+</script>
 
 {% endblock %}

@@ -1,4 +1,4 @@
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.http import HttpResponseNotFound, HttpRequest, HttpResponse, JsonResponse
 from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,6 +8,7 @@ from .models import Category, Excursion, Booking, Review, GalleryReview
 from .forms import BookingForm
 from .tasks import send_message_in_chat_tg
 from .utils import current_datetime_msk
+from ex_site import settings
 
 
 class MainPage(ListView):
@@ -24,7 +25,7 @@ class MainPage(ListView):
                 "excursions": Excursion.get_tours_with_count_location(),
                 "categories": Category.get_categories_with_counts()
             }
-            cache.set("main_page", query_set, 60 * 10)
+            cache.set("main_page", query_set, 60 * settings.CACHES_MINUTES)
             return query_set
 
 
@@ -39,7 +40,7 @@ class Destination(ListView):
             return cache_destination
         else:
             query_set = Excursion.get_tours_by_category_slug(slug=self.kwargs["category_slug"])
-            cache.set(self.kwargs["category_slug"], query_set, 60 * 10)
+            cache.set(self.kwargs["category_slug"], query_set, 60 * settings.CACHES_MINUTES)
             return query_set
 
 
@@ -55,7 +56,7 @@ class Tours(ListView):
             return tours_cache
         else:
             query_set = Excursion.published.all()
-            cache.set("tours", query_set, 60 * 10)
+            cache.set("tours", query_set, 60 * settings.CACHES_MINUTES)
             return query_set
 
 
@@ -70,15 +71,16 @@ class ShowTour(View):
         else:
             excursion = get_object_or_404(Excursion.get_tour_with_locations_by_slug(excursion_slug))
             reviews = excursion.reviews.order_by('-created_at').all()
+            locations = excursion.location.all()
+            has_more_reviews = len(reviews) > 3
             context = {
                 "excursion": excursion,
-                "locations": excursion.location.all(),
+                "locations": locations,
                 "reviews": reviews[:3],
-                "len_reviews": len(reviews),
-                "has_more": True if len(reviews) > 3 else False
+                "has_more": has_more_reviews
             }
-            cache.set(excursion_slug, context, 60 * 10)
-            return context
+        cache.set(excursion_slug, context, 60 * settings.CACHES_MINUTES)
+        return context
 
     def get(self, request: HttpRequest, excursion_slug: str):
         context = self.get_context(excursion_slug)
@@ -159,7 +161,16 @@ def load_more_reviews(request):
 class GalleryReviews(ListView):
     template_name = "logic_app/reviews.html"
     model = GalleryReview
-    context_object_name = "reviews"
+    paginate_by = 6
+
+    def get_queryset(self):
+        reviews = cache.get("reviews")
+        if reviews:
+            return reviews
+        else:
+            query_set = GalleryReview.objects.all()
+            cache.set("reviews", query_set, 60 * settings.CACHES_MINUTES)
+            return query_set
 
 
 def about_us(request: HttpRequest) -> HttpResponse:

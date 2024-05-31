@@ -133,6 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+CACHES_MINUTES = 1
+
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -148,3 +152,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 TELEGRAMM_TOKEN = config['TELEGRAMM_TOKEN']
 GROUP_ID = config["GROUP_ID"]
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
