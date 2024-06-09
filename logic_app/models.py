@@ -32,6 +32,10 @@ class Validators:
         MinValueValidator(1, message="Минимальное значение продолжительности экскурсии"),
         MaxValueValidator(24, message="Максимальное значение продолжительности экскурсии"),
     ]
+    position_validator = [
+        MinValueValidator(1, message="Минимальное значение цифра 1"),
+        MaxValueValidator(100, message="Максимальное значение число 100")
+    ]
 
 
 class Excursion(models.Model):
@@ -215,6 +219,7 @@ class Category(models.Model):
 
 class Location(models.Model):
     title = models.CharField(max_length=70, verbose_name="Название локации")
+    group_id = models.IntegerField(verbose_name="Позиция локации", validators=Validators.position_validator)
     short_info = models.TextField(blank=True, null=True, verbose_name="Короткое описание локации")
     location_photo = models.ImageField(upload_to="location_photo/", null=True, blank=True, verbose_name="Фото локации")
 
@@ -224,3 +229,17 @@ class Location(models.Model):
     class Meta:
         verbose_name = "Локация"
         verbose_name_plural = "Локации"
+
+
+class Employee(models.Model):
+    name = models.CharField(max_length=30, verbose_name="Имя агента")
+    position = models.CharField(max_length=50, verbose_name="Должность")
+    employee_photo = models.ImageField(upload_to="employee_photo/", verbose_name="Фото")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Агент"
+        verbose_name_plural = "Агенты"
+        ordering = ["pk"]

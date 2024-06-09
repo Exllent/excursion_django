@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 
-from .models import Excursion, Category, Location, Review, Booking, GalleryReview
+from .models import Excursion, Category, Location, Review, Booking, GalleryReview, Employee
 
 
 @admin.register(Excursion)
@@ -68,7 +68,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    fields = ("title", "short_info", "show_image", "location_photo")
+    fields = ("title", "short_info", "group_id", "show_image", "location_photo")
     list_display = ("show_image", "title")
     readonly_fields = ("show_image",)
     list_display_links = ("title", "show_image")
@@ -118,13 +118,26 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(GalleryReview)
 class GalleryReviewAdmin(admin.ModelAdmin):
-    fields = ("review_photo", )
+    fields = ("review_photo",)
     list_display = ("id", "show_image")
     readonly_fields = ("show_image",)
     list_display_links = ("id", "show_image")
-    # list_filter = ("pk",)
     list_per_page = 10
 
     @admin.display(description="Скриншот отзыва")
     def show_image(self, gallery_review: GalleryReview):
         return mark_safe(f"<img src={gallery_review.review_photo.url} width=100>")
+
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    fields = ("name", "position", "employee_photo")
+    list_display = ("id", "name", "position", "employee_photo", "show_image")
+    list_display_links = ("id", "show_image")
+    list_filter = ("id",)
+    list_per_page = 5
+    save_on_top = True
+
+    @admin.display(description="Фото агента")
+    def show_image(self, employee: Employee):
+        return mark_safe(f"<img src={employee.employee_photo.url} width=100>")

@@ -1,10 +1,10 @@
-from django.db.models import QuerySet, Count
+from django.db.models import QuerySet
 from django.http import HttpResponseNotFound, HttpRequest, HttpResponse, JsonResponse
 from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, View
 from django.contrib import messages
-from .models import Category, Excursion, Booking, Review, GalleryReview
+from .models import Category, Excursion, Booking, Review, GalleryReview, Employee
 from .forms import BookingForm
 from .tasks import send_message_in_chat_tg
 from .utils import current_datetime_msk
@@ -50,7 +50,7 @@ class Tours(ListView):
     extra_context = {'title': 'Экскурсии в Сочи'}
     paginate_by = 6
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         tours_cache = cache.get("tours")
         if tours_cache:
             return tours_cache
@@ -71,7 +71,7 @@ class ShowTour(View):
         else:
             excursion = get_object_or_404(Excursion.get_tour_with_locations_by_slug(excursion_slug))
             reviews = excursion.reviews.order_by('-created_at').all()
-            locations = excursion.location.all()
+            locations = excursion.location.order_by('group_id').all()
             has_more_reviews = len(reviews) > 3
             context = {
                 "excursion": excursion,
@@ -98,11 +98,11 @@ class ShowTour(View):
                 3: 'трое человек',
                 4: 'четверо человек',
                 5: 'пятеро человек',
-                6: 'шестеро человек',
-                7: 'семеро человек',
-                8: 'восемеро человек',
-                9: 'девятеро человек',
-                10: 'десятеро человек',
+                6: 'шесть человек',
+                7: 'семь человек',
+                8: 'восемь человек',
+                9: 'девять человек',
+                10: 'десять человек',
                 11: 'более десяти человек'
             }
             send_message_in_chat_tg.delay(
@@ -161,9 +161,10 @@ def load_more_reviews(request):
 class GalleryReviews(ListView):
     template_name = "logic_app/reviews.html"
     model = GalleryReview
+    extra_context = {"title": "Галерея отзывов"}
     paginate_by = 6
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         reviews = cache.get("reviews")
         if reviews:
             return reviews
@@ -173,8 +174,19 @@ class GalleryReviews(ListView):
             return query_set
 
 
-def about_us(request: HttpRequest) -> HttpResponse:
-    return render(request, template_name="logic_app/about.html", context={"title": "О нас"})
+class AboutUs(ListView):
+    template_name = "logic_app/about.html"
+    context_object_name = "employees"
+    extra_context = {"title": "О нас"}
+
+    def get_queryset(self) -> QuerySet:
+        tours_cache = cache.get("employees")
+        if tours_cache:
+            return tours_cache
+        else:
+            query_set = Employee.objects.all()
+            cache.set("employees", query_set, 60 * settings.CACHES_MINUTES)
+            return query_set
 
 
 def page_not_found(request, exception) -> HttpResponseNotFound:

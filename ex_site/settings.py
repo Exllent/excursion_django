@@ -23,7 +23,7 @@ config = dotenv_values(f"{BASE_DIR}/.env.dev")
 SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(config['DEBUG'])
+DEBUG = bool(int(config['DEBUG']))
 
 ALLOWED_HOSTS = config['ALLOWED_HOSTS'].split(' ')
 
@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
+    # 'django_extensions',
     'logic_app.apps.LogicAppConfig',
-    "debug_toolbar",
+    # "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'ex_site.urls'
@@ -131,10 +131,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR / 'persistentdata', 'media')
+STATIC_ROOT = os.path.join(BASE_DIR / 'persistentdata', 'static')
 
-
-CACHES_MINUTES = 1
+CACHES_MINUTES = int(config["CACHES_MINUTES"])
 
 
 CACHES = {

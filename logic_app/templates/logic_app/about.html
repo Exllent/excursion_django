@@ -3,7 +3,7 @@
 
 
 {% block title %}
-<title>{{ title }}</title>
+<title>{{ title }} - Экскурсии Сочи</title>
 {% endblock %}
 
 
@@ -51,15 +51,6 @@
                     <p>
                         С уважением, Команда ЭТОСИРИУС
                     </p>
-<!--                    <div class="row mb-4">-->
-<!--                        <div class="col-6">-->
-<!--                            <img class="img-fluid" src="{% static '/logic_app/images/horses.jpg' %}" alt="">-->
-<!--                        </div>-->
-<!--                        <div class="col-6">-->
-<!--                            <img class="img-fluid" src="{% static '/logic_app/images/my_russia.jpg' %}" alt="">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <a href="" class="btn btn-primary mt-1">Book Now</a>-->
                 </div>
             </div>
         </div>
@@ -112,5 +103,34 @@
     </div>
 </div>
 <!-- Feature End -->
+
+
+<!-- Team Start -->
+{% if employees %}
+<div class="container-fluid py-5">
+    <div class="container pt-5 pb-3">
+        <div class="text-center mb-3 pb-3">
+            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Агенты</h6>
+            <h1>Наша команда</h1>
+        </div>
+        <div class="row">
+            {% for employee in employees %}
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
+                <div class="team-item bg-white mb-4">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ employee.employee_photo.url }}" alt="">
+                    </div>
+                    <div class="text-center py-4">
+                        <h5 class="text-truncate">{{ employee.name }}</h5>
+                        <p class="m-0">{{ employee.position }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Team End -->
 
 {% endblock %}
